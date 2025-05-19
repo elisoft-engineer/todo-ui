@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:todo/auth/signin_page.dart';
+import 'package:todo/tasks/todo.dart';
+
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 void main() {
   runApp(const MyApp());
@@ -17,8 +20,12 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF21DB08)),
         fontFamily: "Urbanist",
       ),
-      routes: {'/': (context) => SigninPage(title: "Sign In")},
-      initialRoute: '/',
+      routes: {
+        'signin': (context) => SigninPage(title: "Sign In"),
+        'todo': (context) => TodoPage(),
+      },
+      initialRoute: 'signin',
+      navigatorKey: navigatorKey,
       debugShowCheckedModeBanner: false,
     );
   }
