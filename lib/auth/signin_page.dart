@@ -41,7 +41,7 @@ class _SigninPageState extends State<SigninPage> {
       } else if (response.containsKey('app_error')) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text("An error occured"),
+            content: Text("Server is not responding"),
             backgroundColor: CustomColors.error,
           ),
         );
@@ -85,7 +85,7 @@ class _SigninPageState extends State<SigninPage> {
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(e.toString()),
+          content: Text('An error occured'),
           backgroundColor: CustomColors.error,
         ),
       );
@@ -113,11 +113,11 @@ class _SigninPageState extends State<SigninPage> {
                   ),
                 ),
                 SizedBox(
-                  height: 40,
+                  height: 45,
                   child: TextField(
                     keyboardType: TextInputType.emailAddress,
                     controller: emailController,
-                    style: CustomTextStyles.b3.copyWith(
+                    style: CustomTextStyles.b2.copyWith(
                       color: CustomColors.textColor,
                     ),
                     decoration: InputDecoration(
@@ -135,12 +135,12 @@ class _SigninPageState extends State<SigninPage> {
                   ),
                 ),
                 SizedBox(
-                  height: 40,
+                  height: 45,
                   child: TextField(
                     keyboardType: TextInputType.text,
                     controller: passwordController,
                     obscureText: true,
-                    style: CustomTextStyles.b3,
+                    style: CustomTextStyles.b1,
                     decoration: InputDecoration(
                       labelText: "Password",
                       border: OutlineInputBorder(
