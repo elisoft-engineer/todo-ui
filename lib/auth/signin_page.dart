@@ -30,11 +30,18 @@ class _SigninPageState extends State<SigninPage> {
       setState(() {
         isLoading = false;
       });
-      print(response);
       if (response.containsKey('error')) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(response['error']),
+            content: Text(response['error']['non_field_errors'].join(', ')),
+            backgroundColor: CustomColors.error,
+          ),
+        );
+        return;
+      } else if (response.containsKey('app_error')) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text("An error occured"),
             backgroundColor: CustomColors.error,
           ),
         );
@@ -78,7 +85,7 @@ class _SigninPageState extends State<SigninPage> {
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text("Server is not responding"),
+          content: Text(e.toString()),
           backgroundColor: CustomColors.error,
         ),
       );
@@ -109,6 +116,7 @@ class _SigninPageState extends State<SigninPage> {
                   height: 40,
                   child: TextField(
                     keyboardType: TextInputType.emailAddress,
+                    controller: emailController,
                     style: CustomTextStyles.b3.copyWith(
                       color: CustomColors.textColor,
                     ),
@@ -130,6 +138,7 @@ class _SigninPageState extends State<SigninPage> {
                   height: 40,
                   child: TextField(
                     keyboardType: TextInputType.text,
+                    controller: passwordController,
                     obscureText: true,
                     style: CustomTextStyles.b3,
                     decoration: InputDecoration(
@@ -146,21 +155,24 @@ class _SigninPageState extends State<SigninPage> {
                     ),
                   ),
                 ),
-                SizedBox(
-                  width: MediaQuery.of(context).size.width,
-                  height: 40,
-                  child:
-                      isLoading
-                          ? const CircularProgressIndicator()
-                          : ElevatedButton(
-                            onPressed: signin,
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: CustomColors.primaryColor,
-                              foregroundColor: CustomColors.background,
-                            ),
-                            child: Text("Sign In", style: CustomTextStyles.b2),
-                          ),
-                ),
+                isLoading
+                    ? SizedBox(
+                      width: 35,
+                      height: 35,
+                      child: const CircularProgressIndicator(),
+                    )
+                    : SizedBox(
+                      width: MediaQuery.of(context).size.width,
+                      height: 35,
+                      child: ElevatedButton(
+                        onPressed: signin,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: CustomColors.primaryColor,
+                          foregroundColor: CustomColors.background,
+                        ),
+                        child: Text("Sign In", style: CustomTextStyles.b2),
+                      ),
+                    ),
               ],
             ),
           ),
