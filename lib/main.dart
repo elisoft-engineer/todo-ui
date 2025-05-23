@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:todo/auth/signin_page.dart';
-import 'package:todo/tasks/todo.dart';
+import 'package:todo/tasks/main.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
@@ -17,12 +17,14 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Todo',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF21DB08)),
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: const Color.fromARGB(255, 255, 0, 255),
+        ),
         fontFamily: "Urbanist",
       ),
       routes: {
         'signin': (context) => SigninPage(title: "Sign In"),
-        'todo': (context) => TodoPage(),
+        'tasks': (context) => TaskViewSet(),
       },
       initialRoute: 'signin',
       navigatorKey: navigatorKey,
