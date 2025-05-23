@@ -41,7 +41,7 @@ class _SigninPageState extends State<SigninPage> {
       } else if (response.containsKey('app_error')) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text("Server is not responding"),
+            content: Text(response['app_error'].toString()),
             backgroundColor: CustomColors.error,
           ),
         );
@@ -74,7 +74,7 @@ class _SigninPageState extends State<SigninPage> {
         prefs.setBool('is_active', isActive);
         prefs.setBool('is_staff', isStaff);
 
-        Navigator.of(context).pushReplacementNamed("todo");
+        Navigator.of(context).pushReplacementNamed("tasks");
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text("Signed in as $email"),
@@ -120,17 +120,8 @@ class _SigninPageState extends State<SigninPage> {
                     style: CustomTextStyles.b2.copyWith(
                       color: CustomColors.textColor,
                     ),
-                    decoration: InputDecoration(
+                    decoration: customInputDecoration.copyWith(
                       labelText: "Email",
-                      border: OutlineInputBorder(
-                        borderSide: BorderSide(color: CustomColors.textColor),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: CustomColors.textColor),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: CustomColors.textColor),
-                      ),
                     ),
                   ),
                 ),
@@ -141,17 +132,8 @@ class _SigninPageState extends State<SigninPage> {
                     controller: passwordController,
                     obscureText: true,
                     style: CustomTextStyles.b1,
-                    decoration: InputDecoration(
+                    decoration: customInputDecoration.copyWith(
                       labelText: "Password",
-                      border: OutlineInputBorder(
-                        borderSide: BorderSide(color: CustomColors.textColor),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: CustomColors.textColor),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: CustomColors.textColor),
-                      ),
                     ),
                   ),
                 ),
@@ -167,8 +149,10 @@ class _SigninPageState extends State<SigninPage> {
                       child: ElevatedButton(
                         onPressed: signin,
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: CustomColors.primaryColor,
-                          foregroundColor: CustomColors.background,
+                          backgroundColor:
+                              Theme.of(context).colorScheme.primary,
+                          foregroundColor:
+                              Theme.of(context).colorScheme.onPrimary,
                         ),
                         child: Text("Sign In", style: CustomTextStyles.b2),
                       ),
