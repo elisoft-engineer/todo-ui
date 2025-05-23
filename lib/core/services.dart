@@ -6,7 +6,7 @@ import 'package:todo/auth/services.dart';
 import 'package:todo/main.dart';
 
 class APIService {
-  static const baseUrl = "http://127.0.0.1:8000/api/";
+  static const baseUrl = "http://elkanax.local:8000/api/";
 
   static Future<dynamic> get(String path, {bool auth = false}) async {
     try {
@@ -76,7 +76,7 @@ class APIService {
         return {'error': jsonDecode(response.body)};
       }
     } catch (e) {
-      return {'app_error': "An error occured"};
+      return {'app_error': e.toString()};
     }
   }
 }
