@@ -1,5 +1,6 @@
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:todo/components/app_bar.dart';
 import 'package:todo/tasks/doing.dart';
 import 'package:todo/tasks/done.dart';
 import 'package:todo/tasks/on_hold.dart';
@@ -21,6 +22,15 @@ class _TaskViewSetState extends State<TaskViewSet> {
     OnHoldPage(),
   ];
 
+  get _getTitle =>
+      _index == 0
+          ? "Todo"
+          : _index == 1
+          ? "Doing"
+          : _index == 2
+          ? "Done"
+          : "On Hold";
+
   Widget _getWidget(int index) {
     if (index > views.length - 1 || index < 0) {
       return views[0];
@@ -33,6 +43,7 @@ class _TaskViewSetState extends State<TaskViewSet> {
     final colorScheme = Theme.of(context).colorScheme;
 
     return Scaffold(
+      appBar: TopBar(title: _getTitle),
       body: _getWidget(_index),
       bottomNavigationBar: CurvedNavigationBar(
         items: [
@@ -43,7 +54,6 @@ class _TaskViewSetState extends State<TaskViewSet> {
         ],
         index: _index,
         height: 55,
-        maxWidth: 500,
         animationCurve: Curves.easeInOut,
         animationDuration: Duration(milliseconds: 250),
         backgroundColor: Colors.transparent,
