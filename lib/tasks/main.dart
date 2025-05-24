@@ -14,7 +14,7 @@ class TaskViewSet extends StatefulWidget {
 }
 
 class _TaskViewSetState extends State<TaskViewSet> {
-  int _index = 1;
+  int _index = 0;
   final List<Widget> views = [
     TodoPage(),
     DoingPage(),
