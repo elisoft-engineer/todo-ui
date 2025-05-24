@@ -3,18 +3,25 @@ import 'package:todo/tasks/models.dart';
 
 class TaskService {
   static Future<List<Task>> fetchTasks(String status) async {
-    final response = await APIService.get('tasks/?status=$status', auth: true);
-    if (response is List) {
-      return response
-          .map((task) => Task.fromJson(task as Map<String, dynamic>))
-          .toList();
-    } else if (response is Map) {
-      print(response);
-      throw Exception(
-        response['error'] ?? "An error occured while trying to fetch tasks",
+    try {
+      final response = await APIService.get(
+        'tasks/?status=$status',
+        auth: true,
       );
-    } else {
-      throw Exception("Unexpected response format");
+
+      if (response is Map && response.containsKey('error')) {
+        throw Exception(response['error']);
+      }
+
+      if (response is List) {
+        return response
+            .map((task) => Task.fromJson(task as Map<String, dynamic>))
+            .toList();
+      }
+
+      throw Exception('Unexpected response format');
+    } catch (e) {
+      throw Exception('Failed to load tasks: ${e.toString()}');
     }
   }
 }
