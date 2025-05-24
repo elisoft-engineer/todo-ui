@@ -1,12 +1,13 @@
 import 'dart:convert';
 
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:todo/auth/services.dart';
 import 'package:todo/main.dart';
 
 class APIService {
-  static const baseUrl = "http://elkanax.local:8000/api/";
+  static String get baseUrl => dotenv.env['API_BASE_URL']!;
 
   static Future<dynamic> get(String path, {bool auth = false}) async {
     try {
@@ -20,7 +21,7 @@ class APIService {
         }
       }
 
-      final response = await http.post(url, headers: headers);
+      final response = await http.get(url, headers: headers);
 
       if (response.statusCode == 200) {
         return jsonDecode(response.body);
