@@ -28,21 +28,20 @@ class _TaskListState extends State<TaskList> {
   @override
   void initState() {
     super.initState();
-    _fetchTasks();
+    _tasksFuture = _fetchTasks();
   }
 
-  void _fetchTasks() {
-    setState(() {
-      _tasksFuture = TaskService.fetchTasks(
-        widget.taskStatus == TaskStatus.todo
-            ? "todo"
-            : widget.taskStatus == TaskStatus.doing
-            ? "doing"
-            : widget.taskStatus == TaskStatus.done
-            ? "done"
-            : "on hold",
-      );
-    });
+  Future<List<Task>> _fetchTasks() {
+    Future<List<Task>> tasks = TaskService.fetchTasks(
+      widget.taskStatus == TaskStatus.todo
+          ? "todo"
+          : widget.taskStatus == TaskStatus.doing
+          ? "doing"
+          : widget.taskStatus == TaskStatus.done
+          ? "done"
+          : "on hold",
+    );
+    return tasks;
   }
 
   @override
@@ -60,7 +59,11 @@ class _TaskListState extends State<TaskList> {
         final tasks = snapshot.data ?? [];
 
         return RefreshIndicator(
-          onRefresh: () async => _fetchTasks(),
+          onRefresh: () async {
+            setState(() {
+              _tasksFuture = _fetchTasks();
+            });
+          },
           child:
               tasks.isEmpty
                   ? SingleChildScrollView(
