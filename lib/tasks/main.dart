@@ -14,13 +14,7 @@ class TaskViewSet extends StatefulWidget {
 
 class _TaskViewSetState extends State<TaskViewSet> {
   int _index = 0;
-  TaskStatus taskStatus;
-
-  @override
-  void initState() {
-    super.initState();
-    taskStatus = TaskStatus.todo;
-  }
+  TaskStatus taskStatus = TaskStatus.todo;
 
   get _getTitle =>
       _index == 0
