@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:todo/components/notifications.dart';
 import 'package:todo/core/styles.dart';
 import 'package:todo/core/services.dart';
 import 'package:todo/components/app_bar.dart';
@@ -31,28 +32,25 @@ class _SigninPageState extends State<SigninPage> {
         isLoading = false;
       });
       if (response.containsKey('error')) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(response['error']['non_field_errors'].join(', ')),
-            backgroundColor: CustomColors.error,
-          ),
-        );
+        if (mounted) {
+          CustomNotifications.showError(
+            context,
+            response['error']['non_field_errors'].join(', '),
+          );
+        }
         return;
       } else if (response.containsKey('app_error')) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(response['app_error'].toString()),
-            backgroundColor: CustomColors.error,
-          ),
-        );
+        if (mounted) {
+          CustomNotifications.showError(
+            context,
+            response['app_error'].toString(),
+          );
+        }
         return;
       } else if (response.containsKey('Server')) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text("Server is having issues"),
-            backgroundColor: CustomColors.error,
-          ),
-        );
+        if (mounted) {
+          CustomNotifications.showError(context, "Server is having issues");
+        }
         return;
       } else {
         final String accessToken = response['access'];
@@ -74,21 +72,15 @@ class _SigninPageState extends State<SigninPage> {
         prefs.setBool('is_active', isActive);
         prefs.setBool('is_staff', isStaff);
 
-        Navigator.of(context).pushReplacementNamed("tasks");
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text("Signed in as $email"),
-            backgroundColor: CustomColors.success,
-          ),
-        );
+        if (mounted) {
+          Navigator.of(context).pushReplacementNamed("tasks");
+          CustomNotifications.showSuccess(context, "Signed in as $email");
+        }
       }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('An error occured'),
-          backgroundColor: CustomColors.error,
-        ),
-      );
+      if (mounted) {
+        CustomNotifications.showError(context, 'An error occured');
+      }
     }
   }
 
