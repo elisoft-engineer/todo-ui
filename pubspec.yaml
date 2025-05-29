@@ -37,9 +37,7 @@ dependencies:
   http: ^1.4.0
   flutter_dotenv: ^5.2.1
   shared_preferences: ^2.5.3
-  file_picker: ^10.1.9
   intl: ^0.20.2
-  image_cropper: ^9.1.0
   curved_navigation_bar: ^1.0.6
   top_snackbar_flutter: ^3.3.0
 
