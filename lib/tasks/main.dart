@@ -16,14 +16,18 @@ class _TaskViewSetState extends State<TaskViewSet> {
   int _index = 0;
   TaskStatus taskStatus = TaskStatus.todo;
 
-  get _getTitle =>
-      _index == 0
-          ? "Todo"
-          : _index == 1
-          ? "Doing"
-          : _index == 2
-          ? "Done"
-          : "On Hold";
+  get _getTitle {
+    switch (taskStatus) {
+      case TaskStatus.todo:
+        return "Todo";
+      case TaskStatus.doing:
+        return "Doing";
+      case TaskStatus.done:
+        return "Done";
+      case TaskStatus.onHold:
+        return "On Hold";
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
