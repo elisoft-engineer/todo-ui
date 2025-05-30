@@ -15,20 +15,20 @@ class TaskList extends StatefulWidget {
 class _TaskListState extends State<TaskList> {
   Future<List<Task>>? _tasksFuture;
 
-  Color _getPriorityColor(int priority) {
-    if (priority == 5) {
-      return Color(0xffef2000);
-    } else if (priority == 4) {
-      return Colors.amber;
-    } else {
-      return Color.fromARGB(255, 12, 189, 20);
-    }
-  }
-
   @override
   void initState() {
     super.initState();
     _tasksFuture = _fetchTasks();
+  }
+
+  @override
+  void didUpdateWidget(covariant TaskList oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.taskStatus != widget.taskStatus) {
+      setState(() {
+        _tasksFuture = _fetchTasks();
+      });
+    }
   }
 
   Future<List<Task>> _fetchTasks() {
@@ -42,6 +42,16 @@ class _TaskListState extends State<TaskList> {
           : "on hold",
     );
     return tasks;
+  }
+
+  Color _getPriorityColor(int priority) {
+    if (priority == 5) {
+      return Color(0xffef2000);
+    } else if (priority == 4) {
+      return Colors.amber;
+    } else {
+      return Color.fromARGB(255, 12, 189, 20);
+    }
   }
 
   @override
@@ -70,7 +80,12 @@ class _TaskListState extends State<TaskList> {
                     physics: const AlwaysScrollableScrollPhysics(),
                     child: SizedBox(
                       height: MediaQuery.of(context).size.height,
-                      child: const Center(child: Text('No tasks found')),
+                      child: const Center(
+                        child: Text(
+                          'No tasks found',
+                          style: CustomTextStyles.b2,
+                        ),
+                      ),
                     ),
                   )
                   : ListView.builder(
