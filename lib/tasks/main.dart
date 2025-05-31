@@ -1,6 +1,7 @@
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:todo/components/app_bar.dart';
+import 'package:todo/tasks/dialogs.dart';
 import 'package:todo/tasks/list.dart';
 
 enum TaskStatus { todo, doing, done, onHold }
@@ -34,7 +35,25 @@ class _TaskViewSetState extends State<TaskViewSet> {
     final colorScheme = Theme.of(context).colorScheme;
 
     return Scaffold(
-      appBar: TopBar(title: _getTitle),
+      appBar: TopBar(
+        title: _getTitle,
+        actions: [
+          IconButton(
+            onPressed:
+                () => showDialog(
+                  context: context,
+                  builder:
+                      (context) => AddTaskDialog(
+                        onSuccess:
+                            () => setState(() {
+                              super.didUpdateWidget(widget);
+                            }),
+                      ),
+                ),
+            icon: Icon(Icons.add),
+          ),
+        ],
+      ),
       body: TaskList(taskStatus: taskStatus),
       bottomNavigationBar: CurvedNavigationBar(
         items: [
