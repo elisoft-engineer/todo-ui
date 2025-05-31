@@ -33,13 +33,14 @@ class _TaskListState extends State<TaskList> {
 
   Future<List<Task>> _fetchTasks() {
     Future<List<Task>> tasks = TaskService.fetchTasks(
-      widget.taskStatus == TaskStatus.todo
-          ? "todo"
-          : widget.taskStatus == TaskStatus.doing
-          ? "doing"
-          : widget.taskStatus == TaskStatus.done
-          ? "done"
-          : "on hold",
+      status:
+          widget.taskStatus == TaskStatus.todo
+              ? "todo"
+              : widget.taskStatus == TaskStatus.doing
+              ? "doing"
+              : widget.taskStatus == TaskStatus.done
+              ? "done"
+              : "on hold",
     );
     return tasks;
   }
