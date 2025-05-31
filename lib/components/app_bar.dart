@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 
 class TopBar extends StatelessWidget implements PreferredSizeWidget {
-  const TopBar({super.key, required this.title});
+  const TopBar({super.key, required this.title, this.actions});
   final String title;
+  final List<Widget>? actions;
 
   @override
   Widget build(BuildContext context) {
