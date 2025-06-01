@@ -89,7 +89,7 @@ class _SigninPageState extends State<SigninPage> {
     return Scaffold(
       appBar: TopBar(title: "Sign In"),
       body: Padding(
-        padding: const EdgeInsets.all(10.0),
+        padding: const EdgeInsets.all(12.0),
         child: Center(
           child: SizedBox(
             width: MediaQuery.of(context).size.width,
@@ -98,22 +98,27 @@ class _SigninPageState extends State<SigninPage> {
               crossAxisAlignment: CrossAxisAlignment.center,
               spacing: 20,
               children: [
-                Text(
-                  "Sign in to continue",
-                  style: CustomTextStyles.h3.copyWith(
-                    color: CustomColors.textColor,
-                  ),
-                ),
+                Text("Sign in to continue", style: CustomTextStyles.h3),
                 SizedBox(
                   height: 45,
                   child: TextField(
                     keyboardType: TextInputType.emailAddress,
                     controller: emailController,
-                    style: CustomTextStyles.b2.copyWith(
-                      color: CustomColors.textColor,
-                    ),
-                    decoration: customInputDecoration.copyWith(
+                    style: CustomTextStyles.b2,
+                    decoration: InputDecoration(
                       labelText: "Email",
+                      prefixIcon: Icon(Icons.email),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: Theme.of(context).colorScheme.primary,
+                          width: 2,
+                        ),
+                      ),
+                      border: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: Theme.of(context).colorScheme.inversePrimary,
+                        ),
+                      ),
                     ),
                   ),
                 ),
@@ -124,8 +129,20 @@ class _SigninPageState extends State<SigninPage> {
                     controller: passwordController,
                     obscureText: true,
                     style: CustomTextStyles.b1,
-                    decoration: customInputDecoration.copyWith(
+                    decoration: InputDecoration(
                       labelText: "Password",
+                      prefixIcon: Icon(Icons.lock),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: Theme.of(context).colorScheme.primary,
+                          width: 2,
+                        ),
+                      ),
+                      border: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: Theme.of(context).colorScheme.inversePrimary,
+                        ),
+                      ),
                     ),
                   ),
                 ),
