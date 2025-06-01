@@ -10,9 +10,10 @@ class TopBar extends StatelessWidget implements PreferredSizeWidget {
     return AppBar(
       backgroundColor: Theme.of(context).colorScheme.inversePrimary,
       title: Text(title),
+      actions: actions,
     );
   }
 
   @override
-  Size get preferredSize => const Size.fromHeight(45);
+  Size get preferredSize => const Size.fromHeight(50);
 }
