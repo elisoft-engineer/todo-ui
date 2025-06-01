@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:todo/components/notifications.dart';
+import 'package:todo/core/styles.dart';
 import 'package:todo/tasks/services.dart';
 
 class AddTaskDialog extends StatefulWidget {
@@ -55,13 +56,16 @@ class _AddTaskDialogState extends State<AddTaskDialog> {
 
   @override
   Widget build(BuildContext context) {
+    final ColorScheme colorScheme = Theme.of(context).colorScheme;
     return AlertDialog(
       title: const Text('New Task'),
+      titleTextStyle: CustomTextStyles.b1.copyWith(color: colorScheme.primary),
       content: Form(
         key: _formKey,
         child: SingleChildScrollView(
           child: Column(
             mainAxisSize: MainAxisSize.min,
+            spacing: 12,
             children: [
               TextFormField(
                 controller: _detailController,
@@ -70,6 +74,15 @@ class _AddTaskDialogState extends State<AddTaskDialog> {
                 decoration: InputDecoration(
                   labelText: 'Detail',
                   errorText: _formErrors?['title']?.join(', '),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: colorScheme.primary,
+                      width: 2,
+                    ),
+                  ),
+                  border: OutlineInputBorder(
+                    borderSide: BorderSide(color: colorScheme.inversePrimary),
+                  ),
                 ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
@@ -84,12 +97,29 @@ class _AddTaskDialogState extends State<AddTaskDialog> {
                 decoration: InputDecoration(
                   labelText: 'Priority',
                   errorText: _formErrors?['priority']?.join(', '),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: colorScheme.primary,
+                      width: 2,
+                    ),
+                  ),
+                  border: OutlineInputBorder(
+                    borderSide: BorderSide(color: colorScheme.inversePrimary),
+                  ),
                 ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Priority is required';
                   }
-                  return null;
+                  try {
+                    int parsedValue = int.parse(value);
+                    if (parsedValue < 1 || parsedValue > 5) {
+                      return 'Value must range from 1 to 5';
+                    }
+                    return null;
+                  } catch (_) {
+                    return 'Value must be an integer';
+                  }
                 },
               ),
             ],
@@ -109,20 +139,21 @@ class _AddTaskDialogState extends State<AddTaskDialog> {
                 ElevatedButton(
                   onPressed: () => Navigator.of(context).pop(),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Theme.of(context).colorScheme.secondary,
-                    foregroundColor: Theme.of(context).colorScheme.onSecondary,
+                    backgroundColor: colorScheme.secondary,
+                    foregroundColor: colorScheme.onSecondary,
                   ),
                   child: const Text('Cancel'),
                 ),
                 ElevatedButton(
-                  onPressed: () => submit,
+                  onPressed: submit,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Theme.of(context).colorScheme.primary,
-                    foregroundColor: Theme.of(context).colorScheme.onPrimary,
+                    backgroundColor: colorScheme.primary,
+                    foregroundColor: colorScheme.onPrimary,
                   ),
                   child: const Text('Submit'),
                 ),
               ],
+      actionsAlignment: MainAxisAlignment.spaceBetween,
     );
   }
 }
