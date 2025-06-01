@@ -112,9 +112,7 @@ class _TaskListState extends State<TaskList> {
                         ),
                         subtitle: Text(
                           task.humanizedTime,
-                          style: CustomTextStyles.s2.copyWith(
-                            color: CustomColors.textColor,
-                          ),
+                          style: CustomTextStyles.s2,
                         ),
                         trailing: Container(
                           height: 8,
