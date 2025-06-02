@@ -14,7 +14,7 @@ class TaskCreationForm extends StatefulWidget {
 class _TaskCreationFormState extends State<TaskCreationForm> {
   final _formKey = GlobalKey<FormState>();
   final _detailController = TextEditingController();
-  final _priorityController = TextEditingController();
+  double _priority = 4.0;
   Map<String, dynamic>? _formErrors;
   bool _isSubmitting = false;
 
@@ -29,7 +29,7 @@ class _TaskCreationFormState extends State<TaskCreationForm> {
     try {
       final _ = await TaskService.createTask(
         detail: _detailController.text.trim(),
-        priority: int.parse(_priorityController.text),
+        priority: _priority.toInt(),
       );
 
       if (mounted) {
@@ -58,7 +58,7 @@ class _TaskCreationFormState extends State<TaskCreationForm> {
   Widget build(BuildContext context) {
     final ColorScheme colorScheme = Theme.of(context).colorScheme;
     return Padding(
-      padding: const EdgeInsets.all(20.0),
+      padding: const EdgeInsets.symmetric(vertical: 64.0, horizontal: 16.0),
       child: Container(
         padding: EdgeInsets.all(20),
         decoration: BoxDecoration(
@@ -70,10 +70,9 @@ class _TaskCreationFormState extends State<TaskCreationForm> {
           child: SingleChildScrollView(
             child: Column(
               mainAxisSize: MainAxisSize.min,
-              spacing: 16,
+              spacing: 24,
               children: [
                 Text('New Task', style: CustomTextStyles.h2),
-                SizedBox(height: 4),
                 TextFormField(
                   controller: _detailController,
                   keyboardType: TextInputType.text,
@@ -101,37 +100,15 @@ class _TaskCreationFormState extends State<TaskCreationForm> {
                     return null;
                   },
                 ),
-                TextFormField(
-                  controller: _priorityController,
-                  keyboardType: TextInputType.number,
-                  decoration: InputDecoration(
-                    labelText: 'Priority',
-                    errorText: _formErrors?['priority']?.join(', '),
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(
-                        color: colorScheme.primary,
-                        width: 2,
-                      ),
-                      borderRadius: BorderRadius.all(Radius.circular(10)),
-                    ),
-                    border: OutlineInputBorder(
-                      borderSide: BorderSide(color: colorScheme.inversePrimary),
-                      borderRadius: BorderRadius.all(Radius.circular(10)),
-                    ),
-                  ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Priority is required';
-                    }
-                    try {
-                      int parsedValue = int.parse(value);
-                      if (parsedValue < 1 || parsedValue > 5) {
-                        return 'Value must range from 1 to 5';
-                      }
-                      return null;
-                    } catch (_) {
-                      return 'Value must be an integer';
-                    }
+                Slider.adaptive(
+                  value: _priority,
+                  max: 5,
+                  min: 1,
+                  divisions: 4,
+                  onChanged: (double value) {
+                    setState(() {
+                      _priority = value;
+                    });
                   },
                 ),
                 Row(
