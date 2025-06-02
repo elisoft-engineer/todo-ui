@@ -54,18 +54,18 @@ class _TaskViewSetState extends State<TaskViewSet> {
       body: TaskList(taskStatus: taskStatus),
       bottomNavigationBar: CurvedNavigationBar(
         items: [
-          Icon(Icons.list_alt, color: colorScheme.primary),
-          Icon(Icons.autorenew, color: colorScheme.primary),
-          Icon(Icons.check_circle, color: colorScheme.primary),
-          Icon(Icons.pause_circle_filled, color: colorScheme.primary),
+          Icon(Icons.list_alt, color: colorScheme.onPrimary),
+          Icon(Icons.autorenew, color: colorScheme.onPrimary),
+          Icon(Icons.check_circle, color: colorScheme.onPrimary),
+          Icon(Icons.pause_circle_filled, color: colorScheme.onPrimary),
         ],
         index: _index,
         height: 55,
         animationCurve: Curves.easeInOut,
         animationDuration: Duration(milliseconds: 250),
         backgroundColor: Colors.transparent,
-        color: colorScheme.inversePrimary,
-        buttonBackgroundColor: colorScheme.inversePrimary,
+        color: colorScheme.primary,
+        buttonBackgroundColor: colorScheme.primary,
         onTap: (selected) {
           setState(() {
             _index = selected;
