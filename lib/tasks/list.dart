@@ -95,18 +95,17 @@ class _TaskListState extends State<TaskList> {
                       final task = tasks[index];
                       return ListTile(
                         key: Key(task.id),
-                        leading: Icon(
-                          widget.taskStatus == TaskStatus.todo
-                              ? Icons.pending_actions_outlined
-                              : widget.taskStatus == TaskStatus.doing
-                              ? Icons.autorenew
-                              : widget.taskStatus == TaskStatus.done
-                              ? Icons.check_circle
-                              : Icons.pause,
+                        leading: Container(
+                          height: 18,
+                          width: 18,
+                          decoration: BoxDecoration(
+                            color: _getPriorityColor(task.priority),
+                            borderRadius: BorderRadius.all(Radius.circular(9)),
+                          ),
                         ),
                         title: Text(
                           task.detail,
-                          style: CustomTextStyles.b2.copyWith(
+                          style: CustomTextStyles.b1.copyWith(
                             color: Theme.of(context).colorScheme.secondary,
                           ),
                         ),
