@@ -20,7 +20,8 @@ class Main extends StatelessWidget {
       title: 'Todo',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color.fromARGB(255, 255, 0, 119),
+          seedColor: Colors.teal,
+          brightness: Brightness.dark,
         ),
         fontFamily: "Urbanist",
       ),
