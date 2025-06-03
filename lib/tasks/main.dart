@@ -1,4 +1,3 @@
-import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:todo/components/app_bar.dart';
 import 'package:todo/tasks/forms.dart';
@@ -13,8 +12,10 @@ class TaskViewSet extends StatefulWidget {
   State<TaskViewSet> createState() => _TaskViewSetState();
 }
 
+enum PopupMenuItems { profile, settings }
+
 class _TaskViewSetState extends State<TaskViewSet> {
-  int _index = 0;
+  int _selectedIndex = 0;
   TaskStatus taskStatus = TaskStatus.todo;
 
   get _getTitle {
@@ -38,43 +39,75 @@ class _TaskViewSetState extends State<TaskViewSet> {
       appBar: TopBar(
         title: _getTitle,
         actions: [
-          IconButton(
-            onPressed:
-                () => showModalBottomSheet(
-                  context: context,
-                  isScrollControlled: true,
-                  backgroundColor: Colors.transparent,
-                  builder: (context) => TaskCreationForm(onSuccess: () => {}),
-                ),
-            icon: Icon(Icons.add),
-            iconSize: 30,
+          PopupMenuButton<PopupMenuItems>(
+            icon: Icon(Icons.more_vert_outlined),
+            itemBuilder:
+                (context) => [
+                  PopupMenuItem(
+                    value: PopupMenuItems.profile,
+                    child: SizedBox(
+                      width: 144,
+                      child: Row(
+                        spacing: 12,
+                        children: [Icon(Icons.person), Text('Profile')],
+                      ),
+                    ),
+                  ),
+                  PopupMenuItem(
+                    value: PopupMenuItems.settings,
+                    child: SizedBox(
+                      width: 144,
+                      child: Row(
+                        spacing: 12,
+                        children: [Icon(Icons.settings), Text('Settings')],
+                      ),
+                    ),
+                  ),
+                ],
           ),
         ],
       ),
       body: TaskList(taskStatus: taskStatus),
-      bottomNavigationBar: CurvedNavigationBar(
-        items: [
-          Icon(Icons.list_alt, color: colorScheme.onPrimary),
-          Icon(Icons.autorenew, color: colorScheme.onPrimary),
-          Icon(Icons.check_circle, color: colorScheme.onPrimary),
-          Icon(Icons.pause_circle_filled, color: colorScheme.onPrimary),
+      floatingActionButton:
+          taskStatus == TaskStatus.todo
+              ? IconButton(
+                onPressed:
+                    () => showModalBottomSheet(
+                      context: context,
+                      isScrollControlled: true,
+                      backgroundColor: Colors.transparent,
+                      builder:
+                          (context) => TaskCreationForm(onSuccess: () => {}),
+                    ),
+                icon: Icon(Icons.add, size: 30),
+                style: IconButton.styleFrom(
+                  backgroundColor: colorScheme.onSecondary,
+                ),
+              )
+              : null,
+      bottomNavigationBar: NavigationBar(
+        destinations: [
+          NavigationDestination(
+            icon: Icon(Icons.pending_actions_outlined),
+            label: 'Todo',
+          ),
+          NavigationDestination(icon: Icon(Icons.autorenew), label: 'Doing'),
+          NavigationDestination(icon: Icon(Icons.check_circle), label: 'Done'),
+          NavigationDestination(
+            icon: Icon(Icons.pause_circle),
+            label: 'On Hold',
+          ),
         ],
-        index: _index,
-        height: 55,
-        animationCurve: Curves.easeInOut,
-        animationDuration: Duration(milliseconds: 250),
-        backgroundColor: Colors.transparent,
-        color: colorScheme.primary,
-        buttonBackgroundColor: colorScheme.primary,
-        onTap: (selected) {
+        selectedIndex: _selectedIndex,
+        onDestinationSelected: (selectedIndex) {
           setState(() {
-            _index = selected;
+            _selectedIndex = selectedIndex;
             taskStatus =
-                _index == 0
+                _selectedIndex == 0
                     ? TaskStatus.todo
-                    : _index == 1
+                    : _selectedIndex == 1
                     ? TaskStatus.doing
-                    : _index == 2
+                    : _selectedIndex == 2
                     ? TaskStatus.done
                     : TaskStatus.onHold;
           });
