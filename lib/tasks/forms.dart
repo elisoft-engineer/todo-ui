@@ -58,7 +58,7 @@ class _TaskCreationFormState extends State<TaskCreationForm> {
   Widget build(BuildContext context) {
     final ColorScheme colorScheme = Theme.of(context).colorScheme;
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 64.0, horizontal: 16.0),
+      padding: const EdgeInsets.all(15.0),
       child: Container(
         padding: EdgeInsets.all(20),
         decoration: BoxDecoration(
@@ -102,6 +102,7 @@ class _TaskCreationFormState extends State<TaskCreationForm> {
                 ),
                 Slider.adaptive(
                   value: _priority,
+                  label: 'Priority',
                   max: 5,
                   min: 1,
                   divisions: 4,
@@ -123,11 +124,10 @@ class _TaskCreationFormState extends State<TaskCreationForm> {
                             ),
                           ]
                           : [
-                            ElevatedButton(
+                            OutlinedButton(
                               onPressed: () => Navigator.of(context).pop(),
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: colorScheme.tertiary,
-                                foregroundColor: colorScheme.onTertiary,
+                              style: OutlinedButton.styleFrom(
+                                foregroundColor: colorScheme.primary,
                               ),
                               child: const Text('Cancel'),
                             ),
