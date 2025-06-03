@@ -88,85 +88,91 @@ class _SigninPageState extends State<SigninPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: TopBar(title: "Sign In"),
-      body: Padding(
-        padding: const EdgeInsets.all(12.0),
-        child: Center(
-          child: SizedBox(
-            width: MediaQuery.of(context).size.width,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              spacing: 20,
-              children: [
-                Text("Sign in to continue", style: CustomTextStyles.h3),
-                SizedBox(
-                  height: 45,
-                  child: TextField(
-                    keyboardType: TextInputType.emailAddress,
-                    controller: emailController,
-                    style: CustomTextStyles.b2,
-                    decoration: InputDecoration(
-                      labelText: "Email",
-                      prefixIcon: Icon(Icons.email),
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(
-                          color: Theme.of(context).colorScheme.primary,
-                          width: 2,
-                        ),
-                      ),
-                      border: OutlineInputBorder(
-                        borderSide: BorderSide(
-                          color: Theme.of(context).colorScheme.inversePrimary,
+      body: Center(
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(12.0),
+            child: Center(
+              child: SizedBox(
+                width: MediaQuery.of(context).size.width,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  spacing: 20,
+                  children: [
+                    Text("Sign in to continue", style: CustomTextStyles.h2),
+                    SizedBox(
+                      height: 45,
+                      child: TextField(
+                        keyboardType: TextInputType.emailAddress,
+                        controller: emailController,
+                        style: CustomTextStyles.b2,
+                        decoration: InputDecoration(
+                          labelText: "Email",
+                          prefixIcon: Icon(Icons.email),
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color: Theme.of(context).colorScheme.primary,
+                              width: 2,
+                            ),
+                          ),
+                          border: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color:
+                                  Theme.of(context).colorScheme.inversePrimary,
+                            ),
+                          ),
                         ),
                       ),
                     ),
-                  ),
+                    SizedBox(
+                      height: 45,
+                      child: TextField(
+                        keyboardType: TextInputType.text,
+                        controller: passwordController,
+                        obscureText: true,
+                        style: CustomTextStyles.b1,
+                        decoration: InputDecoration(
+                          labelText: "Password",
+                          prefixIcon: Icon(Icons.lock),
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color: Theme.of(context).colorScheme.primary,
+                              width: 2,
+                            ),
+                          ),
+                          border: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color:
+                                  Theme.of(context).colorScheme.inversePrimary,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    isLoading
+                        ? SizedBox(
+                          width: 35,
+                          height: 35,
+                          child: const CircularProgressIndicator(),
+                        )
+                        : SizedBox(
+                          width: MediaQuery.of(context).size.width,
+                          height: 35,
+                          child: ElevatedButton(
+                            onPressed: signin,
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor:
+                                  Theme.of(context).colorScheme.primary,
+                              foregroundColor:
+                                  Theme.of(context).colorScheme.onPrimary,
+                            ),
+                            child: Text("Sign In", style: CustomTextStyles.b2),
+                          ),
+                        ),
+                  ],
                 ),
-                SizedBox(
-                  height: 45,
-                  child: TextField(
-                    keyboardType: TextInputType.text,
-                    controller: passwordController,
-                    obscureText: true,
-                    style: CustomTextStyles.b1,
-                    decoration: InputDecoration(
-                      labelText: "Password",
-                      prefixIcon: Icon(Icons.lock),
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(
-                          color: Theme.of(context).colorScheme.primary,
-                          width: 2,
-                        ),
-                      ),
-                      border: OutlineInputBorder(
-                        borderSide: BorderSide(
-                          color: Theme.of(context).colorScheme.inversePrimary,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                isLoading
-                    ? SizedBox(
-                      width: 35,
-                      height: 35,
-                      child: const CircularProgressIndicator(),
-                    )
-                    : SizedBox(
-                      width: MediaQuery.of(context).size.width,
-                      height: 35,
-                      child: ElevatedButton(
-                        onPressed: signin,
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor:
-                              Theme.of(context).colorScheme.primary,
-                          foregroundColor:
-                              Theme.of(context).colorScheme.onPrimary,
-                        ),
-                        child: Text("Sign In", style: CustomTextStyles.b2),
-                      ),
-                    ),
-              ],
+              ),
             ),
           ),
         ),
