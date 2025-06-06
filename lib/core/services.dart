@@ -77,7 +77,47 @@ class APIService {
         return {'error': jsonDecode(response.body)};
       }
     } catch (e) {
-      return {'app_error': e.toString()};
+      return {'app_error': 'An error occured'};
+    }
+  }
+
+  static Future<dynamic> put(
+    String path,
+    Map<String, dynamic> body, {
+    bool auth = false,
+  }) async {
+    try {
+      final Uri url = Uri.parse('$baseUrl$path');
+      Map<String, String> headers = {"Content-Type": "application/json"};
+      if (auth) {
+        final prefs = await SharedPreferences.getInstance();
+        final token = prefs.getString("access_token");
+        if (token != null) {
+          headers["Authorization"] = 'Bearer $token';
+        }
+      }
+
+      final response = await http.put(
+        url,
+        headers: headers,
+        body: jsonEncode(body),
+      );
+
+      if (response.statusCode == 200) {
+        return jsonDecode(response.body);
+      } else if (response.statusCode == 401) {
+        bool success = await TokenService.refresh();
+        if (success) {
+          return await put(path, body, auth: true);
+        } else {
+          navigatorKey.currentState?.pushReplacementNamed('signin');
+          return null;
+        }
+      } else {
+        return {'error': jsonDecode(response.body)};
+      }
+    } catch (e) {
+      return {'app_error': 'An error occured'};
     }
   }
 }
