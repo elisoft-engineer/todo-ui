@@ -21,7 +21,7 @@ class Main extends StatelessWidget {
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(
           seedColor: Colors.teal,
-          brightness: Brightness.dark,
+          brightness: Brightness.light,
         ),
         fontFamily: "Urbanist",
       ),
