@@ -57,6 +57,8 @@ class _TaskListState extends State<TaskList> {
 
   @override
   Widget build(BuildContext context) {
+    final ColorScheme colorScheme = Theme.of(context).colorScheme;
+
     return FutureBuilder<List<Task>>(
       future: _tasksFuture,
       builder: (context, snapshot) {
@@ -93,32 +95,53 @@ class _TaskListState extends State<TaskList> {
                     itemCount: tasks.length,
                     itemBuilder: (context, index) {
                       final task = tasks[index];
-                      return ListTile(
-                        key: Key(task.id),
-                        leading: Container(
-                          height: 18,
-                          width: 18,
-                          decoration: BoxDecoration(
-                            color: _getPriorityColor(task.priority),
-                            borderRadius: BorderRadius.all(Radius.circular(9)),
+                      return Container(
+                        margin: EdgeInsets.only(top: 12, left: 8, right: 8),
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 4.0,
+                          horizontal: 8.0,
+                        ),
+
+                        decoration: BoxDecoration(
+                          color: const Color(0x218FC9C4),
+                          borderRadius: BorderRadius.all(Radius.circular(10)),
+                        ),
+                        child: ListTile(
+                          key: Key(task.id),
+                          leading: Container(
+                            height: 18,
+                            width: 18,
+                            decoration: BoxDecoration(
+                              color: _getPriorityColor(task.priority),
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(9),
+                              ),
+                            ),
                           ),
-                        ),
-                        title: Text(
-                          task.detail,
-                          style: CustomTextStyles.b1.copyWith(
-                            color: Theme.of(context).colorScheme.secondary,
+                          title: Text(
+                            task.detail,
+                            style: CustomTextStyles.b1.copyWith(
+                              color: Theme.of(context).colorScheme.secondary,
+                            ),
                           ),
-                        ),
-                        subtitle: Text(
-                          task.humanizedTime,
-                          style: CustomTextStyles.s2,
-                        ),
-                        trailing: Container(
-                          height: 8,
-                          width: 24,
-                          decoration: BoxDecoration(
-                            color: _getPriorityColor(task.priority),
-                            borderRadius: BorderRadius.all(Radius.circular(5)),
+                          subtitle: Text(
+                            task.humanizedTime,
+                            style: CustomTextStyles.s2,
+                          ),
+                          trailing: Container(
+                            width: 32,
+                            height: 32,
+                            decoration: BoxDecoration(
+                              color: Colors.teal[300],
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(16),
+                              ),
+                            ),
+                            child: Icon(
+                              Icons.edit,
+                              size: 16,
+                              color: colorScheme.surface,
+                            ),
                           ),
                         ),
                       );
