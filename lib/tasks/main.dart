@@ -81,7 +81,11 @@ class _TaskViewSetState extends State<TaskViewSet> {
                     ),
                 icon: Icon(Icons.add, size: 30),
                 style: IconButton.styleFrom(
-                  backgroundColor: colorScheme.onSecondary,
+                  backgroundColor:
+                      Theme.of(context).colorScheme.brightness ==
+                              Brightness.dark
+                          ? colorScheme.onSecondary
+                          : colorScheme.inversePrimary,
                 ),
               )
               : null,
