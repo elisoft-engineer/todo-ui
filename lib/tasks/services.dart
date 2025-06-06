@@ -44,4 +44,25 @@ class TaskService {
       throw Exception('Failed to create task: ${e.toString()}');
     }
   }
+
+  static Future<void> updateTask({
+    required String id,
+    required String detail,
+    required int priority,
+  }) async {
+    try {
+      final response = await APIService.put('tasks/$id/', {
+        'detail': detail,
+        'priority': priority,
+      }, auth: true);
+
+      if (response is Map && response.containsKey('error')) {
+        throw Exception(response['error']);
+      }
+
+      return;
+    } catch (e) {
+      throw Exception('Failed to create task: ${e.toString()}');
+    }
+  }
 }
