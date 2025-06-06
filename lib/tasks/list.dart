@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:todo/core/styles.dart';
+import 'package:todo/tasks/forms.dart';
 import 'package:todo/tasks/main.dart';
 import 'package:todo/tasks/models.dart';
 import 'package:todo/tasks/services.dart';
@@ -128,19 +129,27 @@ class _TaskListState extends State<TaskList> {
                             task.humanizedTime,
                             style: CustomTextStyles.s2,
                           ),
-                          trailing: Container(
-                            width: 32,
-                            height: 32,
-                            decoration: BoxDecoration(
-                              color: Colors.teal[300],
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(16),
+                          trailing: GestureDetector(
+                            onTap: () {
+                              showDialog(
+                                context: context,
+                                builder: (context) => TaskEditForm(task: task),
+                              );
+                            },
+                            child: Container(
+                              width: 32,
+                              height: 32,
+                              decoration: BoxDecoration(
+                                color: Colors.teal[300],
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(16),
+                                ),
                               ),
-                            ),
-                            child: Icon(
-                              Icons.edit,
-                              size: 16,
-                              color: colorScheme.surface,
+                              child: Icon(
+                                Icons.edit,
+                                size: 16,
+                                color: colorScheme.surface,
+                              ),
                             ),
                           ),
                         ),
