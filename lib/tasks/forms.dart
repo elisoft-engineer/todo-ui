@@ -159,8 +159,9 @@ class _TaskCreationFormState extends State<TaskCreationForm> {
 }
 
 class TaskEditForm extends StatefulWidget {
-  const TaskEditForm({super.key, required this.task});
+  const TaskEditForm({super.key, required this.task, required this.onSuccess});
   final Task task;
+  final VoidCallback onSuccess;
 
   @override
   State<TaskEditForm> createState() => _TaskEditFormState();
@@ -172,6 +173,73 @@ class _TaskEditFormState extends State<TaskEditForm> {
     text: widget.task.detail,
   );
   late double _priority = widget.task.priority.toDouble();
+  bool _isLoading = false;
+
+  Future<void> updateTask() async {
+    if (!_formKey.currentState!.validate()) return;
+
+    setState(() {
+      _isLoading = true;
+      _formErrors = null;
+    });
+
+    try {
+      final _ = await TaskService.updateTask(
+        id: widget.task.id,
+        detail: _detailController.text.trim(),
+        priority: _priority.toInt(),
+      );
+
+      if (mounted) {
+        widget.onSuccess();
+        Navigator.of(context).pop();
+        CustomNotifications.showSuccess(
+          context,
+          'Task has been updated successfully!',
+        );
+      }
+    } catch (e) {
+      if (e is Map<String, dynamic>) {
+        setState(() {
+          _formErrors = e;
+        });
+      } else {
+        if (mounted) {
+          CustomNotifications.showError(context, e.toString());
+        }
+      }
+    } finally {
+      if (mounted) {
+        setState(() => _isLoading = false);
+      }
+    }
+  }
+
+  Future<void> deleteTask() async {
+    setState(() {
+      _isLoading = true;
+      _formErrors = null;
+    });
+
+    try {
+      final _ = await TaskService.deleteTask(id: widget.task.id);
+
+      if (mounted) {
+        widget.onSuccess();
+        Navigator.of(context).pop();
+        CustomNotifications.showSuccess(context, 'Task has been deleted');
+      }
+    } catch (e) {
+      if (mounted) {
+        CustomNotifications.showError(context, e.toString());
+      }
+    } finally {
+      if (mounted) {
+        setState(() => _isLoading = false);
+      }
+    }
+  }
+
   Map<String, dynamic>? _formErrors;
   @override
   Widget build(BuildContext context) {
@@ -244,30 +312,42 @@ class _TaskEditFormState extends State<TaskEditForm> {
         Expanded(
           child: Row(
             mainAxisSize: MainAxisSize.max,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              IconButton(
-                onPressed: () {},
-                icon: Icon(Icons.edit, color: colorScheme.primary),
-                style: IconButton.styleFrom(
-                  backgroundColor: colorScheme.inversePrimary,
-                ),
-              ),
-              IconButton(
-                onPressed: () {},
-                icon: Icon(Icons.delete, color: colorScheme.error),
-                style: IconButton.styleFrom(
-                  backgroundColor: const Color.fromARGB(87, 235, 71, 42),
-                ),
-              ),
-              IconButton(
-                onPressed: () {},
-                icon: Icon(Icons.keyboard_double_arrow_right_outlined),
-                style: IconButton.styleFrom(
-                  backgroundColor: const Color.fromARGB(75, 94, 110, 109),
-                ),
-              ),
-            ],
+            mainAxisAlignment:
+                _isLoading
+                    ? MainAxisAlignment.spaceAround
+                    : MainAxisAlignment.spaceBetween,
+            children:
+                _isLoading
+                    ? [
+                      const SizedBox(
+                        width: 35,
+                        height: 35,
+                        child: CircularProgressIndicator(),
+                      ),
+                    ]
+                    : [
+                      IconButton(
+                        onPressed: updateTask,
+                        icon: Icon(Icons.edit, color: colorScheme.primary),
+                        style: IconButton.styleFrom(
+                          backgroundColor: colorScheme.inversePrimary,
+                        ),
+                      ),
+                      IconButton(
+                        onPressed: deleteTask,
+                        icon: Icon(Icons.delete, color: colorScheme.error),
+                        style: IconButton.styleFrom(
+                          backgroundColor: Color.fromARGB(87, 235, 71, 42),
+                        ),
+                      ),
+                      IconButton(
+                        onPressed: () {},
+                        icon: Icon(Icons.keyboard_double_arrow_right_outlined),
+                        style: IconButton.styleFrom(
+                          backgroundColor: Color.fromARGB(75, 94, 110, 109),
+                        ),
+                      ),
+                    ],
           ),
         ),
       ],
