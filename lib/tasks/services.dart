@@ -62,7 +62,21 @@ class TaskService {
 
       return;
     } catch (e) {
-      throw Exception('Failed to create task: ${e.toString()}');
+      throw Exception('Failed to update task: ${e.toString()}');
+    }
+  }
+
+  static Future<void> deleteTask({required String id}) async {
+    try {
+      final response = await APIService.delete('tasks/$id/', auth: true);
+
+      if (response is Map && response.containsKey('error')) {
+        throw Exception(response['error']);
+      }
+
+      return;
+    } catch (e) {
+      throw Exception('Failed to delete task: ${e.toString()}');
     }
   }
 }
