@@ -120,4 +120,36 @@ class APIService {
       return {'app_error': 'An error occured'};
     }
   }
+
+  static Future<dynamic> delete(String path, {bool auth = false}) async {
+    try {
+      final Uri url = Uri.parse('$baseUrl$path');
+      Map<String, String> headers = {"Content-Type": "application/json"};
+      if (auth) {
+        final prefs = await SharedPreferences.getInstance();
+        final token = prefs.getString("access_token");
+        if (token != null) {
+          headers["Authorization"] = 'Bearer $token';
+        }
+      }
+
+      final response = await http.delete(url, headers: headers);
+
+      if (response.statusCode == 204 || response.statusCode == 200) {
+        return jsonDecode(response.body);
+      } else if (response.statusCode == 401) {
+        bool success = await TokenService.refresh();
+        if (success) {
+          return await delete(path, auth: true);
+        } else {
+          navigatorKey.currentState?.pushReplacementNamed('signin');
+          return null;
+        }
+      } else {
+        return {'error': jsonDecode(response.body)};
+      }
+    } catch (e) {
+      return {'app_error': 'An error occured'};
+    }
+  }
 }
