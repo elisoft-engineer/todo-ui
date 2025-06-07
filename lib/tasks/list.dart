@@ -133,7 +133,11 @@ class _TaskListState extends State<TaskList> {
                             onTap: () {
                               showDialog(
                                 context: context,
-                                builder: (context) => TaskEditForm(task: task),
+                                builder:
+                                    (context) => TaskEditForm(
+                                      task: task,
+                                      onSuccess: () => {},
+                                    ),
                               );
                             },
                             child: Container(
