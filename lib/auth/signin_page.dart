@@ -86,6 +86,7 @@ class _SigninPageState extends State<SigninPage> {
 
   @override
   Widget build(BuildContext context) {
+    final ColorScheme colorScheme = Theme.of(context).colorScheme;
     return Scaffold(
       appBar: TopBar(title: "Sign In"),
       body: Center(
@@ -112,14 +113,13 @@ class _SigninPageState extends State<SigninPage> {
                           prefixIcon: Icon(Icons.email),
                           focusedBorder: OutlineInputBorder(
                             borderSide: BorderSide(
-                              color: Theme.of(context).colorScheme.primary,
+                              color: colorScheme.primary,
                               width: 2,
                             ),
                           ),
                           border: OutlineInputBorder(
                             borderSide: BorderSide(
-                              color:
-                                  Theme.of(context).colorScheme.inversePrimary,
+                              color: colorScheme.inversePrimary,
                             ),
                           ),
                         ),
@@ -137,14 +137,13 @@ class _SigninPageState extends State<SigninPage> {
                           prefixIcon: Icon(Icons.lock),
                           focusedBorder: OutlineInputBorder(
                             borderSide: BorderSide(
-                              color: Theme.of(context).colorScheme.primary,
+                              color: colorScheme.primary,
                               width: 2,
                             ),
                           ),
                           border: OutlineInputBorder(
                             borderSide: BorderSide(
-                              color:
-                                  Theme.of(context).colorScheme.inversePrimary,
+                              color: colorScheme.inversePrimary,
                             ),
                           ),
                         ),
@@ -162,10 +161,8 @@ class _SigninPageState extends State<SigninPage> {
                           child: ElevatedButton(
                             onPressed: signin,
                             style: ElevatedButton.styleFrom(
-                              backgroundColor:
-                                  Theme.of(context).colorScheme.primary,
-                              foregroundColor:
-                                  Theme.of(context).colorScheme.onPrimary,
+                              backgroundColor: colorScheme.primary,
+                              foregroundColor: colorScheme.onPrimary,
                             ),
                             child: Text("Sign In", style: CustomTextStyles.b2),
                           ),
