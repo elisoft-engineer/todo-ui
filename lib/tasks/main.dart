@@ -121,8 +121,7 @@ class _TaskViewSetState extends State<TaskViewSet> {
                       context: context,
                       isScrollControlled: true,
                       backgroundColor: Colors.transparent,
-                      builder:
-                          (context) => TaskCreationForm(onSuccess: () => {}),
+                      builder: (context) => TaskCreationForm(),
                     ),
                 icon: Icon(Icons.add, size: 30),
                 style: IconButton.styleFrom(
