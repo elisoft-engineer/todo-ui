@@ -342,9 +342,25 @@ class _TaskEditFormState extends State<TaskEditForm> {
                       ),
                       IconButton(
                         onPressed: () {},
-                        icon: Icon(Icons.keyboard_double_arrow_right_outlined),
+                        icon: Icon(
+                          Icons.pause_circle_filled_outlined,
+                          color: const Color.fromARGB(255, 82, 117, 126),
+                        ),
                         style: IconButton.styleFrom(
-                          backgroundColor: Color.fromARGB(75, 94, 110, 109),
+                          backgroundColor: Color.fromARGB(90, 94, 122, 129),
+                        ),
+                      ),
+                      IconButton(
+                        onPressed: () {},
+                        icon: Icon(
+                          Icons.keyboard_double_arrow_right_outlined,
+                          color:
+                              colorScheme.brightness == Brightness.light
+                                  ? Color.fromARGB(255, 9, 102, 6)
+                                  : Color.fromARGB(255, 130, 209, 127),
+                        ),
+                        style: IconButton.styleFrom(
+                          backgroundColor: Color.fromARGB(74, 58, 226, 17),
                         ),
                       ),
                     ],
