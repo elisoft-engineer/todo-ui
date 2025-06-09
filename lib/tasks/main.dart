@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:todo/components/app_bar.dart';
+import 'package:todo/core/notifiers.dart';
 import 'package:todo/tasks/forms.dart';
 import 'package:todo/tasks/list.dart';
 
@@ -12,7 +13,7 @@ class TaskViewSet extends StatefulWidget {
   State<TaskViewSet> createState() => _TaskViewSetState();
 }
 
-enum PopupMenuItems { profile, settings }
+enum PopupMenuItems { profile, settings, theme }
 
 class _TaskViewSetState extends State<TaskViewSet> {
   int _selectedIndex = 0;
@@ -41,6 +42,19 @@ class _TaskViewSetState extends State<TaskViewSet> {
         actions: [
           PopupMenuButton<PopupMenuItems>(
             icon: Icon(Icons.more_vert_outlined),
+            onSelected: (PopupMenuItems value) {
+              switch (value) {
+                case PopupMenuItems.theme:
+                  if (themeModeNotifier.value == Brightness.light) {
+                    themeModeNotifier.value = Brightness.dark;
+                  } else {
+                    themeModeNotifier.value = Brightness.light;
+                  }
+                  break;
+                default:
+                  print('item pressed');
+              }
+            },
             itemBuilder:
                 (context) => [
                   PopupMenuItem(
@@ -60,6 +74,37 @@ class _TaskViewSetState extends State<TaskViewSet> {
                       child: Row(
                         spacing: 12,
                         children: [Icon(Icons.settings), Text('Settings')],
+                      ),
+                    ),
+                  ),
+                  PopupMenuItem(
+                    value: PopupMenuItems.theme,
+                    child: SizedBox(
+                      width: 144,
+                      child: Row(
+                        spacing: 12,
+                        children: [
+                          ValueListenableBuilder(
+                            valueListenable: themeModeNotifier,
+                            builder: (context, themeMode, child) {
+                              return Icon(
+                                themeMode == Brightness.light
+                                    ? Icons.light_mode
+                                    : Icons.dark_mode,
+                              );
+                            },
+                          ),
+                          ValueListenableBuilder(
+                            valueListenable: themeModeNotifier,
+                            builder: (context, themeMode, child) {
+                              return Text(
+                                themeMode == Brightness.light
+                                    ? 'light mode'
+                                    : 'dark mode',
+                              );
+                            },
+                          ),
+                        ],
                       ),
                     ),
                   ),
