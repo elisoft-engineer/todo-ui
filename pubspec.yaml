@@ -38,7 +38,6 @@ dependencies:
   flutter_dotenv: ^5.2.1
   shared_preferences: ^2.5.3
   intl: ^0.20.2
-  curved_navigation_bar: ^1.0.6
   top_snackbar_flutter: ^3.3.0
 
 dev_dependencies:
@@ -80,18 +79,14 @@ flutter:
   # list giving the asset and other descriptors for the font. For
   # example:
   fonts:
-    - family: Urbanist
+    - family: FiraMono
       fonts:
-        - asset: assets/fonts/Urbanist-Light.ttf
-          weight: 300
-        - asset: assets/fonts/Urbanist-Regular.ttf
+        - asset: assets/fonts/FiraMono-Regular.ttf
           weight: 400
-        - asset: assets/fonts/Urbanist-Medium.ttf
+        - asset: assets/fonts/FiraMono-Medium.ttf
           weight: 500
-        - asset: assets/fonts/Urbanist-Bold.ttf
-          weight: 600
-        - asset: assets/fonts/Urbanist-Black.ttf
-          weight: 900
+        - asset: assets/fonts/FiraMono-Bold.ttf
+          weight: 700
 
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package
