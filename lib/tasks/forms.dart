@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:todo/components/notifications.dart';
+import 'package:todo/core/notifiers.dart';
 import 'package:todo/core/styles.dart';
 import 'package:todo/tasks/models.dart';
 import 'package:todo/tasks/services.dart';
 
 class TaskCreationForm extends StatefulWidget {
-  const TaskCreationForm({super.key, required this.onSuccess});
-  final VoidCallback onSuccess;
+  const TaskCreationForm({super.key});
 
   @override
   State<TaskCreationForm> createState() => _TaskCreationFormState();
@@ -34,9 +34,9 @@ class _TaskCreationFormState extends State<TaskCreationForm> {
       );
 
       if (mounted) {
-        widget.onSuccess();
         Navigator.of(context).pop();
         CustomNotifications.showSuccess(context, 'Task created successfully!');
+        tasksFutureNotifier.value = TaskService.fetchTasks(status: "todo");
       }
     } catch (e) {
       if (e is Map<String, dynamic>) {
@@ -71,43 +71,42 @@ class _TaskCreationFormState extends State<TaskCreationForm> {
           child: SingleChildScrollView(
             child: Column(
               mainAxisSize: MainAxisSize.min,
-              spacing: 24,
               children: [
                 Text('New Task', style: CustomTextStyles.h2),
+                SizedBox(height: 24),
                 SizedBox(
                   width: MediaQuery.sizeOf(context).width,
-                  child: Expanded(
-                    child: TextFormField(
-                      controller: _detailController,
-                      keyboardType: TextInputType.text,
-                      style: CustomTextStyles.b2,
-                      maxLines: 3,
-                      decoration: InputDecoration(
-                        labelText: 'Detail',
-                        errorText: _formErrors?['detail']?.join(', '),
-                        focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color: colorScheme.primary,
-                            width: 2,
-                          ),
-                          borderRadius: BorderRadius.all(Radius.circular(10)),
+                  child: TextFormField(
+                    controller: _detailController,
+                    keyboardType: TextInputType.text,
+                    style: CustomTextStyles.b2,
+                    maxLines: 3,
+                    decoration: InputDecoration(
+                      labelText: 'Detail',
+                      errorText: _formErrors?['detail']?.join(', '),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: colorScheme.primary,
+                          width: 2,
                         ),
-                        border: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color: colorScheme.inversePrimary,
-                          ),
-                          borderRadius: BorderRadius.all(Radius.circular(10)),
-                        ),
+                        borderRadius: BorderRadius.all(Radius.circular(10)),
                       ),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Detail is required';
-                        }
-                        return null;
-                      },
+                      border: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: colorScheme.inversePrimary,
+                        ),
+                        borderRadius: BorderRadius.all(Radius.circular(10)),
+                      ),
                     ),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Detail is required';
+                      }
+                      return null;
+                    },
                   ),
                 ),
+                SizedBox(height: 24),
                 Slider.adaptive(
                   value: _priority,
                   label: 'Priority',
@@ -120,6 +119,7 @@ class _TaskCreationFormState extends State<TaskCreationForm> {
                     });
                   },
                 ),
+                SizedBox(height: 24),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children:
@@ -159,9 +159,8 @@ class _TaskCreationFormState extends State<TaskCreationForm> {
 }
 
 class TaskEditForm extends StatefulWidget {
-  const TaskEditForm({super.key, required this.task, required this.onSuccess});
+  const TaskEditForm({super.key, required this.task});
   final Task task;
-  final VoidCallback onSuccess;
 
   @override
   State<TaskEditForm> createState() => _TaskEditFormState();
@@ -169,11 +168,23 @@ class TaskEditForm extends StatefulWidget {
 
 class _TaskEditFormState extends State<TaskEditForm> {
   final _formKey = GlobalKey<FormState>();
-  late TextEditingController _detailController = TextEditingController(
-    text: widget.task.detail,
-  );
-  late double _priority = widget.task.priority.toDouble();
+  late TextEditingController _detailController = TextEditingController();
+  late double _priority;
+  Map<String, dynamic>? _formErrors;
   bool _isLoading = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _detailController = TextEditingController(text: widget.task.detail);
+    _priority = widget.task.priority.toDouble();
+  }
+
+  @override
+  void dispose() {
+    _detailController.dispose();
+    super.dispose();
+  }
 
   Future<void> updateTask() async {
     if (!_formKey.currentState!.validate()) return;
@@ -191,11 +202,13 @@ class _TaskEditFormState extends State<TaskEditForm> {
       );
 
       if (mounted) {
-        widget.onSuccess();
         Navigator.of(context).pop();
         CustomNotifications.showSuccess(
           context,
           'Task has been updated successfully!',
+        );
+        tasksFutureNotifier.value = TaskService.fetchTasks(
+          status: widget.task.status,
         );
       }
     } catch (e) {
@@ -225,9 +238,11 @@ class _TaskEditFormState extends State<TaskEditForm> {
       final _ = await TaskService.deleteTask(id: widget.task.id);
 
       if (mounted) {
-        widget.onSuccess();
         Navigator.of(context).pop();
         CustomNotifications.showSuccess(context, 'Task has been deleted');
+        tasksFutureNotifier.value = TaskService.fetchTasks(
+          status: widget.task.status,
+        );
       }
     } catch (e) {
       if (mounted) {
@@ -240,7 +255,6 @@ class _TaskEditFormState extends State<TaskEditForm> {
     }
   }
 
-  Map<String, dynamic>? _formErrors;
   @override
   Widget build(BuildContext context) {
     final ColorScheme colorScheme = Theme.of(context).colorScheme;
@@ -259,40 +273,39 @@ class _TaskEditFormState extends State<TaskEditForm> {
         key: _formKey,
         child: Column(
           mainAxisSize: MainAxisSize.min,
-          spacing: 20,
           children: [
+            SizedBox(height: 10),
             SizedBox(
               width: MediaQuery.sizeOf(context).width,
-              child: Expanded(
-                child: TextFormField(
-                  controller: _detailController,
-                  keyboardType: TextInputType.text,
-                  style: CustomTextStyles.b2,
-                  maxLines: 3,
-                  decoration: InputDecoration(
-                    labelText: 'Detail',
-                    errorText: _formErrors?['detail']?.join(', '),
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(
-                        color: colorScheme.primary,
-                        width: 2,
-                      ),
-                      borderRadius: BorderRadius.all(Radius.circular(10)),
+              child: TextFormField(
+                controller: _detailController,
+                keyboardType: TextInputType.text,
+                style: CustomTextStyles.b2,
+                maxLines: 3,
+                decoration: InputDecoration(
+                  labelText: 'Detail',
+                  errorText: _formErrors?['detail']?.join(', '),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: colorScheme.primary,
+                      width: 2,
                     ),
-                    border: OutlineInputBorder(
-                      borderSide: BorderSide(color: colorScheme.inversePrimary),
-                      borderRadius: BorderRadius.all(Radius.circular(10)),
-                    ),
+                    borderRadius: BorderRadius.all(Radius.circular(10)),
                   ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Detail is required';
-                    }
-                    return null;
-                  },
+                  border: OutlineInputBorder(
+                    borderSide: BorderSide(color: colorScheme.inversePrimary),
+                    borderRadius: BorderRadius.all(Radius.circular(10)),
+                  ),
                 ),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Detail is required';
+                  }
+                  return null;
+                },
               ),
             ),
+            SizedBox(height: 20),
             Slider.adaptive(
               value: _priority,
               label: 'Priority',
@@ -309,7 +322,8 @@ class _TaskEditFormState extends State<TaskEditForm> {
         ),
       ),
       actions: [
-        Expanded(
+        SizedBox(
+          width: MediaQuery.sizeOf(context).width,
           child: Row(
             mainAxisSize: MainAxisSize.max,
             mainAxisAlignment:
