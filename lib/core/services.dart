@@ -9,9 +9,13 @@ import 'package:todo/main.dart';
 class APIService {
   static String get baseUrl => dotenv.env['API_BASE_URL']!;
 
-  static Future<dynamic> get(String path, {bool auth = false}) async {
+  static Future<dynamic> get(
+    String path, {
+    bool auth = false,
+    String? q,
+  }) async {
     try {
-      final Uri url = Uri.parse('$baseUrl$path');
+      final Uri url = Uri.parse('$baseUrl$path${q ?? ''}');
       Map<String, String> headers = {"Content-Type": "application/json"};
       if (auth) {
         final prefs = await SharedPreferences.getInstance();
@@ -28,7 +32,7 @@ class APIService {
       } else if (response.statusCode == 401) {
         bool success = await TokenService.refresh();
         if (success) {
-          return await get(path, auth: true);
+          return await get(path, auth: true, q: q);
         } else {
           navigatorKey.currentState?.pushReplacementNamed('signin');
           return null;
@@ -45,9 +49,10 @@ class APIService {
     String path,
     Map<String, dynamic> body, {
     bool auth = false,
+    String? q,
   }) async {
     try {
-      final Uri url = Uri.parse('$baseUrl$path');
+      final Uri url = Uri.parse('$baseUrl$path${q ?? ''}');
       Map<String, String> headers = {"Content-Type": "application/json"};
       if (auth) {
         final prefs = await SharedPreferences.getInstance();
@@ -68,7 +73,7 @@ class APIService {
       } else if (response.statusCode == 401) {
         bool success = await TokenService.refresh();
         if (success) {
-          return await post(path, body, auth: true);
+          return await post(path, body, auth: true, q: q);
         } else {
           navigatorKey.currentState?.pushReplacementNamed('signin');
           return null;
@@ -85,9 +90,10 @@ class APIService {
     String path,
     Map<String, dynamic> body, {
     bool auth = false,
+    String? q,
   }) async {
     try {
-      final Uri url = Uri.parse('$baseUrl$path');
+      final Uri url = Uri.parse('$baseUrl$path${q ?? ''}');
       Map<String, String> headers = {"Content-Type": "application/json"};
       if (auth) {
         final prefs = await SharedPreferences.getInstance();
@@ -108,7 +114,7 @@ class APIService {
       } else if (response.statusCode == 401) {
         bool success = await TokenService.refresh();
         if (success) {
-          return await put(path, body, auth: true);
+          return await put(path, body, auth: true, q: q);
         } else {
           navigatorKey.currentState?.pushReplacementNamed('signin');
           return null;
@@ -121,9 +127,13 @@ class APIService {
     }
   }
 
-  static Future<dynamic> delete(String path, {bool auth = false}) async {
+  static Future<dynamic> delete(
+    String path, {
+    bool auth = false,
+    String? q,
+  }) async {
     try {
-      final Uri url = Uri.parse('$baseUrl$path');
+      final Uri url = Uri.parse('$baseUrl$path${q ?? ''}');
       Map<String, String> headers = {"Content-Type": "application/json"};
       if (auth) {
         final prefs = await SharedPreferences.getInstance();
@@ -140,7 +150,43 @@ class APIService {
       } else if (response.statusCode == 401) {
         bool success = await TokenService.refresh();
         if (success) {
-          return await delete(path, auth: true);
+          return await delete(path, auth: true, q: q);
+        } else {
+          navigatorKey.currentState?.pushReplacementNamed('signin');
+          return null;
+        }
+      } else {
+        return {'error': jsonDecode(response.body)};
+      }
+    } catch (e) {
+      return {'app_error': 'An error occured'};
+    }
+  }
+
+  static Future<dynamic> patch(
+    String path, {
+    bool auth = false,
+    String? q,
+  }) async {
+    try {
+      final Uri url = Uri.parse('$baseUrl$path${q ?? ''}');
+      Map<String, String> headers = {"Content-Type": "application/json"};
+      if (auth) {
+        final prefs = await SharedPreferences.getInstance();
+        final token = prefs.getString("access_token");
+        if (token != null) {
+          headers["Authorization"] = 'Bearer $token';
+        }
+      }
+
+      final response = await http.patch(url, headers: headers);
+
+      if (response.statusCode == 200) {
+        return jsonDecode(response.body);
+      } else if (response.statusCode == 401) {
+        bool success = await TokenService.refresh();
+        if (success) {
+          return await patch(path, auth: true, q: q);
         } else {
           navigatorKey.currentState?.pushReplacementNamed('signin');
           return null;
