@@ -14,11 +14,14 @@ class SigninPage extends StatefulWidget {
 }
 
 class _SigninPageState extends State<SigninPage> {
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   bool isLoading = false;
 
   Future<void> signin() async {
+    if (!_formKey.currentState!.validate()) return;
+
     setState(() {
       isLoading = true;
     });
@@ -28,9 +31,11 @@ class _SigninPageState extends State<SigninPage> {
         'email': emailController.text.trim(),
         'password': passwordController.text.trim(),
       }, auth: false);
+
       setState(() {
         isLoading = false;
       });
+
       if (response.containsKey('error')) {
         if (mounted) {
           CustomNotifications.showError(
@@ -94,17 +99,17 @@ class _SigninPageState extends State<SigninPage> {
           child: Padding(
             padding: const EdgeInsets.all(12.0),
             child: Center(
-              child: SizedBox(
-                width: MediaQuery.of(context).size.width,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  spacing: 20,
-                  children: [
-                    Text("Sign in to continue", style: CustomTextStyles.h2),
-                    SizedBox(
-                      height: 45,
-                      child: TextField(
+              child: Form(
+                key: _formKey,
+                child: SizedBox(
+                  width: MediaQuery.of(context).size.width,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    spacing: 20,
+                    children: [
+                      Text("Sign in to continue", style: CustomTextStyles.h2),
+                      TextFormField(
                         keyboardType: TextInputType.emailAddress,
                         controller: emailController,
                         style: CustomTextStyles.b2,
@@ -123,51 +128,63 @@ class _SigninPageState extends State<SigninPage> {
                             ),
                           ),
                         ),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'This field is required';
+                          }
+                          return null;
+                        },
                       ),
-                    ),
-                    SizedBox(
-                      height: 45,
-                      child: TextField(
+                      TextFormField(
                         keyboardType: TextInputType.text,
                         controller: passwordController,
                         obscureText: true,
-                        style: CustomTextStyles.b1,
+                        style: CustomTextStyles.b1.copyWith(letterSpacing: 2),
                         decoration: InputDecoration(
                           labelText: "Password",
                           prefixIcon: Icon(Icons.lock),
+                          border: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color: colorScheme.inversePrimary,
+                            ),
+                          ),
                           focusedBorder: OutlineInputBorder(
                             borderSide: BorderSide(
                               color: colorScheme.primary,
                               width: 2,
                             ),
                           ),
-                          border: OutlineInputBorder(
-                            borderSide: BorderSide(
-                              color: colorScheme.inversePrimary,
-                            ),
-                          ),
                         ),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'This field is required';
+                          }
+                          return null;
+                        },
                       ),
-                    ),
-                    isLoading
-                        ? SizedBox(
-                          width: 35,
-                          height: 35,
-                          child: const CircularProgressIndicator(),
-                        )
-                        : SizedBox(
-                          width: MediaQuery.of(context).size.width,
-                          height: 35,
-                          child: ElevatedButton(
-                            onPressed: signin,
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: colorScheme.primary,
-                              foregroundColor: colorScheme.onPrimary,
+                      isLoading
+                          ? SizedBox(
+                            width: 35,
+                            height: 35,
+                            child: const CircularProgressIndicator(),
+                          )
+                          : SizedBox(
+                            width: MediaQuery.of(context).size.width,
+                            height: 35,
+                            child: ElevatedButton(
+                              onPressed: signin,
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: colorScheme.primary,
+                                foregroundColor: colorScheme.onPrimary,
+                              ),
+                              child: Text(
+                                "Sign In",
+                                style: CustomTextStyles.b2,
+                              ),
                             ),
-                            child: Text("Sign In", style: CustomTextStyles.b2),
                           ),
-                        ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),
