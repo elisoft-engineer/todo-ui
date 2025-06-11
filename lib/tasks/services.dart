@@ -5,8 +5,9 @@ class TaskService {
   static Future<List<Task>> fetchTasks({required String status}) async {
     try {
       final response = await APIService.get(
-        'tasks/?status=$status',
+        'tasks/',
         auth: true,
+        q: '?status=$status',
       );
 
       if (response is Map && response.containsKey('error')) {
@@ -77,6 +78,38 @@ class TaskService {
       return;
     } catch (e) {
       throw Exception('Failed to delete task: ${e.toString()}');
+    }
+  }
+
+  static Future<void> patchTask({required String id}) async {
+    try {
+      final response = await APIService.patch('tasks/$id/', auth: true);
+
+      if (response is Map && response.containsKey('error')) {
+        throw Exception(response['error']);
+      }
+
+      return;
+    } catch (e) {
+      throw Exception('Failed to push task: ${e.toString()}');
+    }
+  }
+
+  static Future<void> holdTask({required String id}) async {
+    try {
+      final response = await APIService.patch(
+        'tasks/$id/',
+        auth: true,
+        q: '?to-onhold=true',
+      );
+
+      if (response is Map && response.containsKey('error')) {
+        throw Exception(response['error']);
+      }
+
+      return;
+    } catch (e) {
+      throw Exception('Failed to hold task: ${e.toString()}');
     }
   }
 }
