@@ -255,6 +255,63 @@ class _TaskEditFormState extends State<TaskEditForm> {
     }
   }
 
+  Future<void> patchTask() async {
+    setState(() {
+      _isLoading = true;
+      _formErrors = null;
+    });
+
+    try {
+      final _ = await TaskService.patchTask(id: widget.task.id);
+
+      if (mounted) {
+        Navigator.of(context).pop();
+        CustomNotifications.showSuccess(context, 'Task has been held');
+        tasksFutureNotifier.value = TaskService.fetchTasks(
+          status: widget.task.status,
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        CustomNotifications.showError(context, e.toString());
+      }
+    } finally {
+      if (mounted) {
+        setState(() => _isLoading = false);
+      }
+    }
+  }
+
+  Future<void> holdTask() async {
+    setState(() {
+      _isLoading = true;
+      _formErrors = null;
+    });
+
+    try {
+      final _ = await TaskService.holdTask(id: widget.task.id);
+
+      if (mounted) {
+        Navigator.of(context).pop();
+        CustomNotifications.showSuccess(
+          context,
+          'Task has been pushed forward',
+        );
+        tasksFutureNotifier.value = TaskService.fetchTasks(
+          status: widget.task.status,
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        CustomNotifications.showError(context, e.toString());
+      }
+    } finally {
+      if (mounted) {
+        setState(() => _isLoading = false);
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final ColorScheme colorScheme = Theme.of(context).colorScheme;
@@ -355,7 +412,7 @@ class _TaskEditFormState extends State<TaskEditForm> {
                         ),
                       ),
                       IconButton(
-                        onPressed: () {},
+                        onPressed: holdTask,
                         icon: Icon(
                           Icons.pause_circle_filled_outlined,
                           color: const Color.fromARGB(255, 82, 117, 126),
@@ -365,7 +422,7 @@ class _TaskEditFormState extends State<TaskEditForm> {
                         ),
                       ),
                       IconButton(
-                        onPressed: () {},
+                        onPressed: patchTask,
                         icon: Icon(
                           Icons.keyboard_double_arrow_right_outlined,
                           color:
